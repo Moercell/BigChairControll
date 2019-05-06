@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Big Chair</title>
+</head>
+<body>
+<h1>Die Stuhlsteuerung</h1>
+
+    <button type="button" data-action="moveLeft">left</button>
+    <button type="button" data-action="moveRight">right</button>
+    <button type="button" data-action="moveFront">front</button>
+    <button type="button" data-action="moveBack">back</button>
+    <button type="button" data-action="moveStop">stop</button>
+
+<style>
+button {
+    padding: 3em 2em;
+    background-color: lightgrey;
+    border: none;
+    box-shadow: none;
+}
+</style>
+
+
+<script>
+    var App = {};
+
+    function setupWebsocket() {
+        App.socket = {
+            sendSomeBytes: function (bytes) {
+                console.log('socket send bytes:', bytes);
+            }
+        };
+    }
+
+    function sendOverWebsocket(message) {
+        if (!App.socket) {
+            setupWebsocket();
+        }
+
+        App.socket.sendSomeBytes(JSON.stringify(message));
+    }
+
+    function actionLeft() {
+        sendOverWebsocket({action: 'move', direction: 'left'});
+    }
+
+    function actionRight() {
+        sendOverWebsocket({action: 'move', direction: 'right'});
+    }
+
+    function actionFront() {
+        sendOverWebsocket({action: 'move', direction: 'front'});
+    }
+
+    function actionBack() {
+        sendOverWebsocket({action: 'move', direction: 'back'});
+    }
+
+    function actionStop() {
+        sendOverWebsocket({action: 'move', direction: 'stop'});
+    }
+
+    function setupButtons() {
+        // find buttons that want to send an action
+        var buttons = document.querySelectorAll('button[data-action]');
+
+        buttons.forEach(function (button) {
+            var action = button.getAttribute('data-action');
+
+            if (action == 'moveLeft') {
+                button.addEventListener('click', function () {
+                    actionLeft();
+                });
+            }
+
+            if (action == 'moveRight') {
+                button.addEventListener('click', function () {
+                    actionRight();
+                });
+            }
+
+            if (action == 'moveFront') {
+                button.addEventListener('click', function () {
+                    actionFront();
+                });
+            }
+
+            if (action == 'moveBack') {
+                button.addEventListener('click', function () {
+                    actionBack();
+                });
+            }
+
+            if (action == 'moveStop') {
+                button.addEventListener('click', function () {
+                    actionStop();
+                });
+            }
+        })
+    }
+
+    setupButtons();
+</script>
+</body>
+</html>
