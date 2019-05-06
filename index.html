@@ -7,59 +7,73 @@
 <body>
 <h1>Die Stuhlsteuerung</h1>
 
-    <button type="button" data-action="moveLeft">left</button>
-    <button type="button" data-action="moveRight">right</button>
-    <button type="button" data-action="moveFront">front</button>
-    <button type="button" data-action="moveBack">back</button>
-    <button type="button" data-action="moveStop">stop</button>
+<button type="button" data-action="moveFront">move to front</button>
+<button type="button" data-action="moveLeft">turn around left</button>
+<button type="button" data-action="moveRight">turn around right</button>
+<button type="button" data-action="moveBack">move to back</button>
+<button type="button" data-action="moveStop">stop!</button>
 
 <style>
-button {
-    padding: 3em 2em;
-    background-color: lightgrey;
-    border: none;
-    box-shadow: none;
-}
+
+    body {
+        background-color: #323f48;
+        padding: 1em;
+    }
+
+    h1 {
+        color: white;
+        font-family: sans-serif;
+    }
+
+    button {
+        padding: 2.2em 4.2em;
+        background-color: #e86473;
+        color: white;
+        border: none;
+        box-shadow: none;
+        border-radius: 12px;
+        font-family: sans-serif;
+        font-weight: bold;
+        font-size: 1em;
+        margin-top: 0.2em;
+    }
+
+    button:hover {
+        padding: 2.2em 4.2em;
+        background-color: #ED5973;
+        border: none;
+        border-radius: 12px;
+        transform: scaleY(1.1);
+        box-shadow: 4px 6px 18px -9px rgba(0, 0, 0, 0.75);
+    }
 </style>
 
-
 <script>
-    var App = {};
 
-    function setupWebsocket() {
-        App.socket = {
-            sendSomeBytes: function (bytes) {
-                console.log('socket send bytes:', bytes);
-            }
-        };
-    }
+    const chairSocketConnection = new WebSocket("ws://10.51.3.66:6969");
 
-    function sendOverWebsocket(message) {
-        if (!App.socket) {
-            setupWebsocket();
-        }
-
-        App.socket.sendSomeBytes(JSON.stringify(message));
-    }
+    chairSocketConnection.onopen = function () {
+        console.log("Connected to chair!");
+    };
 
     function actionLeft() {
-        sendOverWebsocket({action: 'move', direction: 'left'});
+        sendMessage({action: 'move', direction: 'left'});
     }
 
     function actionRight() {
-        sendOverWebsocket({action: 'move', direction: 'right'});
+        sendMessage({action: 'move', direction: 'right'});
     }
 
     function actionFront() {
-        sendOverWebsocket({action: 'move', direction: 'front'});
+        sendMessage({action: 'move', direction: 'front'});
     }
 
     function actionBack() {
-        sendOverWebsocket({action: 'move', direction: 'back'});
+        sendMessage({action: 'move', direction: 'back'});
     }
 
     function actionStop() {
-        sendOverWebsocket({action: 'move', direction: 'stop'});
+        sendMessage({action: 'move', direction: 'stop'});
     }
 
     function setupButtons() {
@@ -102,6 +116,11 @@ button {
     }
 
     setupButtons();
+
+    function sendMessage(message) {
+        console.log('socket send bytes:', message);
+        chairSocketConnection.send(JSON.stringify(message));
+    }
 </script>
 </body>
 </html>
