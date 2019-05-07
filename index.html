@@ -7,14 +7,19 @@
 <body>
 <h1>Die Stuhlsteuerung</h1>
 
-<button ontouchstart="move('front')" ontouchend="stop()" type="button" data-action="moveFront">move to front</button>
-<button ontouchstart="move('left')" ontouchend="stop()" type="button" data-action="moveLeft">turn around left</button>
-<button ontouchstart="move('right')" ontouchend="stop()" type="button" data-action="moveRight">turn around right</button>
-<button ontouchstart="move('back')" ontouchend="stop()" type="button" data-action="moveBack">move to back</button>
-<button ontouchstart="stop()" ontouchend="stop()" type="button" data-action="moveStop">stop!</button>
+<div class="button-controll-pannel">
+    <div></div>
+    <button ontouchstart="move('front')" ontouchend="stop()" type="button" data-action="moveFront">move to front</button>
+    <div></div>
+    <button ontouchstart="move('left')" ontouchend="stop()" type="button" data-action="moveLeft">turn around left</button>
+    <button ontouchstart="stop()" ontouchend="stop()" type="button" data-action="moveStop">stop!</button>
+    <button ontouchstart="move('right')" ontouchend="stop()" type="button" data-action="moveRight">turn around right</button>
+    <div></div>
+    <button ontouchstart="move('back')" ontouchend="stop()" type="button" data-action="moveBack">move to back</button>
+    <div></div>
+</div>
 
 <style>
-
     body {
         background-color: #323f48;
         padding: 1em;
@@ -23,6 +28,20 @@
     h1 {
         color: white;
         font-family: sans-serif;
+    }
+
+    .button-controll-pannel {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-rows: 1fr 1fr 1fr;
+        grid-column-gap: 1em;
+        grid-row-gap: 1em;
+        width: 90%;
+        height: 31vh;
+        margin-top: 30vh;
+        margin-left: auto;
+        margin-right: auto;
+        margin-bottom: auto;
     }
 
     button {
