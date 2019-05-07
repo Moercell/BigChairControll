@@ -7,11 +7,11 @@
 <body>
 <h1>Die Stuhlsteuerung</h1>
 
-<button type="button" data-action="moveFront">move to front</button>
-<button type="button" data-action="moveLeft">turn around left</button>
-<button type="button" data-action="moveRight">turn around right</button>
-<button type="button" data-action="moveBack">move to back</button>
-<button type="button" data-action="moveStop">stop!</button>
+<button ontouchstart="move('front')" ontouchend="stop()" type="button" data-action="moveFront">move to front</button>
+<button ontouchstart="move('left')" ontouchend="stop()" type="button" data-action="moveLeft">turn around left</button>
+<button ontouchstart="move('right')" ontouchend="stop()" type="button" data-action="moveRight">turn around right</button>
+<button ontouchstart="move('back')" ontouchend="stop()" type="button" data-action="moveBack">move to back</button>
+<button ontouchstart="stop()" ontouchend="stop()" type="button" data-action="moveStop">stop!</button>
 
 <style>
 
@@ -48,79 +48,60 @@
     }
 </style>
 
+<script src="hammer.js""></script>
 <script>
 
-    const chairSocketConnection = new WebSocket("ws://10.51.3.66:6969");
+const chairSocketConnection = new WebSocket("ws://10.51.3.66:6969");
 
-    chairSocketConnection.onopen = function () {
-        console.log("Connected to chair!");
-    };
+chairSocketConnection.onopen = function () {
+    console.log("Connected to chair!");
+};
 
-    function actionLeft() {
-        sendMessage({action: 'move', direction: 'left'});
+function actionLeft() {
+    sendMessage({action: 'move', direction: 'left'});
+}
+
+function actionRight() {
+    sendMessage({action: 'move', direction: 'right'});
+}
+
+function actionFront() {
+    sendMessage({action: 'move', direction: 'front'});
+}
+
+function actionBack() {
+    sendMessage({action: 'move', direction: 'back'});
+}
+
+function actionStop() {
+    sendMessage({action: 'move', direction: 'stop'});
+}
+
+function move(x) {
+    if (x == 'front'){
+        actionFront();
+    }
+    else if(x == 'left'){
+        actionLeft();
+    }
+    else if(x == 'right'){
+        actionRight();
+    }
+    else if(x == 'back'){
+        actionBack();
     }
 
-    function actionRight() {
-        sendMessage({action: 'move', direction: 'right'});
-    }
+}
+function stop() {
+    actionStop();
+}
 
-    function actionFront() {
-        sendMessage({action: 'move', direction: 'front'});
-    }
 
-    function actionBack() {
-        sendMessage({action: 'move', direction: 'back'});
-    }
-
-    function actionStop() {
-        sendMessage({action: 'move', direction: 'stop'});
-    }
-
-    function setupButtons() {
-        // find buttons that want to send an action
-        var buttons = document.querySelectorAll('button[data-action]');
-
-        buttons.forEach(function (button) {
-            var action = button.getAttribute('data-action');
-
-            if (action == 'moveLeft') {
-                button.addEventListener('click', function () {
-                    actionLeft();
-                });
-            }
-
-            if (action == 'moveRight') {
-                button.addEventListener('click', function () {
-                    actionRight();
-                });
-            }
-
-            if (action == 'moveFront') {
-                button.addEventListener('click', function () {
-                    actionFront();
-                });
-            }
-
-            if (action == 'moveBack') {
-                button.addEventListener('click', function () {
-                    actionBack();
-                });
-            }
-
-            if (action == 'moveStop') {
-                button.addEventListener('click', function () {
-                    actionStop();
-                });
-            }
-        })
-    }
-
-    setupButtons();
-
-    function sendMessage(message) {
-        console.log('socket send bytes:', message);
-        chairSocketConnection.send(JSON.stringify(message));
-    }
+function sendMessage(message) {
+    console.log('socket send bytes:', message);
+    chairSocketConnection.send(JSON.stringify(message));
+}
 </script>
+
 </body>
 </html>
